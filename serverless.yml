@@ -18,16 +18,16 @@ service: serverless-sample
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
-frameworkVersion: '2'
+frameworkVersion: "2"
 
 provider:
   name: aws
   runtime: python3.8
   lambdaHashingVersion: 20201221
 
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  # you can overwrite defaults here
+  #  stage: dev
+  region: ap-northeast-1
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -50,13 +50,13 @@ provider:
 #    variable1: value1
 
 # you can add packaging information here
-#package:
-#  include:
-#    - include-me.py
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.py
-#    - exclude-me-dir/**
+package:
+  #  include:
+  #    - include-me.py
+  #    - include-me-dir/**
+  exclude:
+    #    - exclude-me.py
+    - .venv/**
 
 functions:
   hello:
