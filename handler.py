@@ -2,9 +2,11 @@ import json
 
 
 def hello(event, context):
+    params = event.get('queryStringParameters')
+
     body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
+        "input": params
     }
 
     response = {
