@@ -149,3 +149,6 @@ var/
 
 # Serverless directories
 .serverless
+
+# Addtional
+.vscode/
