@@ -75,6 +75,24 @@ functions:
       - httpApi:
           path: /todo
           method: post
+  getTodo:
+    handler: todo.get_todo
+    events:
+      - httpApi:
+          path: /todo/{todoId}
+          method: get
+  putTodo:
+    handler: todo.put_todo
+    events:
+      - httpApi:
+          path: /todo/{todoId}
+          method: put
+  deleteTodo:
+    handler: todo.delete_todo
+    events:
+      - httpApi:
+          path: /todo/{todoId}
+          method: delete
   hello:
     handler: handler.hello
     #    The following are a few example events you can configure
