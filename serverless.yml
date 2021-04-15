@@ -29,8 +29,18 @@ provider:
   #  stage: dev
   region: ap-northeast-1
 
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
+  # you can add statements to the Lambda function's IAM Role here
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/ToDoTable"
+
 #    - Effect: "Allow"
 #      Action:
 #        - "s3:ListBucket"
@@ -59,6 +69,12 @@ package:
     - .venv/**
 
 functions:
+  postTodo:
+    handler: todo.post_todo
+    events:
+      - httpApi:
+          path: /todo
+          method: post
   hello:
     handler: handler.hello
     #    The following are a few example events you can configure
@@ -102,8 +118,21 @@ functions:
 #      variable2: value2
 
 # you can add CloudFormation resource templates here
-#resources:
-#  Resources:
+resources:
+  Resources:
+    todoTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ToDoTable
+        AttributeDefinitions:
+          - AttributeName: todo_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: todo_id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 #    NewResource:
 #      Type: AWS::S3::Bucket
 #      Properties:
