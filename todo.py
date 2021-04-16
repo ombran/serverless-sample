@@ -25,7 +25,7 @@ def get_todo(event, context):
     todo_id = event["pathParameters"]["todoId"]
 
     res = table.get_item(Key={"todo_id": todo_id})
-    item = res["Item"]
+    item = res.get("Item")
 
     response = {"statusCode": 200, "body": json.dumps(item)}
 
