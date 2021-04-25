@@ -12,6 +12,7 @@
 # Happy Coding!
 
 service: serverless-sample
+useDotenv: true
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -41,19 +42,26 @@ provider:
             - dynamodb:DeleteItem
           Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/ToDoTable"
 
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
+  #    - Effect: "Allow"
+  #      Action:
+  #        - "s3:ListBucket"
+  #      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+  #    - Effect: "Allow"
+  #      Action:
+  #        - "s3:PutObject"
+  #      Resource:
+  #        Fn::Join:
+  #          - ""
+  #          - - "arn:aws:s3:::"
+  #            - "Ref" : "ServerlessDeploymentBucket"
+  #            - "/*"
+
+  httpApi:
+    authorizers:
+      auth0Authorizer:
+        identitySource: $request.header.Authorization
+        issuerUrl: ${env:AUTH0_ISSUER_URL}
+        audience: ${env:AUTH0_AUDIENCE}
 
 # you can define service wide environment variables here
 #  environment:
@@ -75,24 +83,32 @@ functions:
       - httpApi:
           path: /todo
           method: post
+          authorizer:
+            name: auth0Authorizer
   getTodo:
     handler: todo.get_todo
     events:
       - httpApi:
           path: /todo/{todoId}
           method: get
+          authorizer:
+            name: auth0Authorizer
   putTodo:
     handler: todo.put_todo
     events:
       - httpApi:
           path: /todo/{todoId}
           method: put
+          authorizer:
+            name: auth0Authorizer
   deleteTodo:
     handler: todo.delete_todo
     events:
       - httpApi:
           path: /todo/{todoId}
           method: delete
+          authorizer:
+            name: auth0Authorizer
   hello:
     handler: handler.hello
     #    The following are a few example events you can configure
@@ -102,6 +118,8 @@ functions:
       - httpApi:
           path: /hello
           method: get
+          authorizer:
+            name: auth0Authorizer
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
